@@ -65,7 +65,6 @@ class OpenTelemetrySpanBuilderImpl extends SpanBuilder {
   @Nullable private final Span ocParent;
   @Nullable private final SpanContext ocRemoteParentSpanContext;
   @Nullable private Sampler ocSampler;
-  @Nullable private Boolean recordEvents;
   @Nullable private io.opentelemetry.api.trace.Span.Kind otelKind;
 
   @Override
@@ -85,7 +84,6 @@ class OpenTelemetrySpanBuilderImpl extends SpanBuilder {
 
   @Override
   public SpanBuilder setRecordEvents(boolean recordEvents) {
-    this.recordEvents = recordEvents;
     return this;
   }
 
@@ -131,7 +129,7 @@ class OpenTelemetrySpanBuilderImpl extends SpanBuilder {
                 ocActiveTraceParams)
             ? OC_SAMPLED_TRACE_OPTIONS
             : OC_NOT_SAMPLED_TRACE_OPTIONS;
-    if (!ocTraceOptions.isSampled() && !Boolean.TRUE.equals(recordEvents)) {
+    if (!ocTraceOptions.isSampled()) {
       return OpenTelemetryNoRecordEventsSpanImpl.create(
           SpanContext.create(ocTraceId, ocSpanId, ocTraceOptions, ocTracestate));
     }
